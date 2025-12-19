@@ -3,16 +3,15 @@ pipeline {
 
     tools {
         nodejs 'node18'
-    }	
-    environment {
-        IMAGE_NAME = "vivek5041/mylearing"
     }
 
     stages {
-
-        stage('Checkout Code') {
+        stage('Verify Node') {
             steps {
-                git url: 'https://github.com/1ms24mc111/mylearning.git', branch: 'main'
+                sh '''
+                    node -v
+                    npm -v
+                '''
             }
         }
 
@@ -27,35 +26,14 @@ pipeline {
                 sh 'npm test'
             }
         }
-
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    dockerImage = docker.build("${IMAGE_NAME}:latest")
-                }
-            }
-        }
-
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
-                        dockerImage.push('latest')
-                    }
-                }
-            }
-        }
     }
 
     post {
         success {
-            echo "✅ Pipeline successful"
+            echo '✅ Pipeline succeeded'
         }
         failure {
-            echo "❌ Pipeline failed"
-        }
-        always {
-            deleteDir()
+            echo '❌ Pipeline failed'
         }
     }
 }
