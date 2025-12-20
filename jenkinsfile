@@ -37,7 +37,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub',
+                    credentialsId: DOCKER_CREDS,
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
@@ -46,4 +46,20 @@ pipeline {
                       /usr/local/bin/docker push ${IMAGE_NAME}:latest
                     '''
                 }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Pipeline Successful"
+        }
+        failure {
+            echo "❌ Pipeline Failed"
+        }
+        always {
+            deleteDir()
+        }
+    }
+}
 
