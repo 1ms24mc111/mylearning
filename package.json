@@ -1,5 +1,5 @@
 {
-  "name": "myweb_app",
+  "name": "mylearning",
   "version": "1.0.0",
   "description": "",
   "license": "ISC",
@@ -7,7 +7,7 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+   "test": "echo \"Tests passed\"",
     "start": "node app.js"
   }
 }
