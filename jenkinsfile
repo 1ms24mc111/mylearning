@@ -1,39 +1,26 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs 'NodeJS'
-    }
-
     stages {
-        stage('Verify Node') {
+        stage('Test in Docker') {
             steps {
                 sh '''
-                    node -v
-                    npm -v
+                  docker run --rm \
+                    -v "$PWD:/app" \
+                    -w /app \
+                    node:18 \
+                    sh -c "npm install && npm test"
                 '''
-            }
-        }
-
-        stage('Install Dependencies') {
-            steps {
-                sh 'npm install'
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                sh 'npm test'
             }
         }
     }
 
     post {
         success {
-            echo '✅ Pipeline succeeded'
+            echo '✅ Tests passed'
         }
         failure {
-            echo '❌ Pipeline failed'
+            echo '❌ Tests failed'
         }
     }
 }
