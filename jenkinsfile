@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "vivek5041/myweb_app"
+        IMAGE_NAME = "vivek5041/mylearning"
         DOCKER_CREDS = "dockerhub"
         PATH = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
     }
