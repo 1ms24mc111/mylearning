@@ -4,6 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = "vivek5041/myweb_app"
         DOCKER_CREDS = "dockerhub"
+        PATH = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
     }
 
     stages {
@@ -17,7 +18,8 @@ pipeline {
         stage('Install Dependencies & Run Tests (Docker)') {
             steps {
                 sh '''
-                  /usr/local/bin/docker run --rm \
+                  export PATH=/usr/local/bin:$PATH
+                  docker run --rm \
                     -v "$PWD:/app" \
                     -w /app \
                     node:18 \
@@ -29,7 +31,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 sh '''
-                  /usr/local/bin/docker build -t ${IMAGE_NAME}:latest .
+                  export PATH=/usr/local/bin:$PATH
+                  docker build -t ${IMAGE_NAME}:latest .
                 '''
             }
         }
@@ -42,8 +45,9 @@ pipeline {
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
                     sh '''
-                      echo "$DOCKER_PASS" | /usr/local/bin/docker login -u "$DOCKER_USER" --password-stdin
-                      /usr/local/bin/docker push ${IMAGE_NAME}:latest
+                      export PATH=/usr/local/bin:$PATH
+                      echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                      docker push ${IMAGE_NAME}:latest
                     '''
                 }
             }
